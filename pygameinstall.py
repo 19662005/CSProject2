@@ -20,3 +20,7 @@ DARK_BLUE = (0, 0, 139)
 font = pygame.font.SysFont(None, 48)
 small_font = pygame.font.SysFont(None, 36)
 
+# Setting up the game screens (also called states), which we'll use to help track what we are displaying and so that things aren't played all at once
+START_SCREEN = "start"
+SCENARIO_SELECT = "select"
+current_screen = START_SCREEN
