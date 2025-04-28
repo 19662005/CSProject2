@@ -23,6 +23,7 @@ small_font = pygame.font.SysFont(None, 36)
 # Setting up the game screens (also called states), which we'll use to help track what we are displaying and so that things aren't played all at once
 START_SCREEN = "start"
 SCENARIO_SELECT = "select"
+SCENARIO_1_SCREEN = "scenario_1"
 current_screen = START_SCREEN
 
 #setting up 'buttons' - these are the clickable areas on the screen that will take you to different screens
@@ -48,11 +49,11 @@ def start_game():
 
 #Later on this is where the code for the actual scenes of each scenario will go
 def scenario_1():
-    print("Scenario 1 selected")
+    global current_screen
+    current_screen = SCENARIO_1_SCREEN
 
 def scenario_2():
     print("Scenario 2 selected")
-
 def scenario_3():
     print("Scenario 3 selected")
 
@@ -63,7 +64,37 @@ scenario_buttons = [
     Button("Scenario 2", WIDTH//2 - 150, 250, 300, 60, scenario_2),
     Button("Scenario 3", WIDTH//2 - 150, 350, 300, 60, scenario_3),
 ]
+#set up scenario 1
+question = "You are at a nightclub and a close friend offers you a pill. What do you do?"
+selected_option = None
+feedback = ""
+options = [
+    "Take the pill"
+    "Ask what it is and who it came from"
+    "Use a fentanyl test strip"
+    "Deny"
+] 
 
+#create responses given the player's choice
+def option_selected(index):
+    global selected_option, feedback
+    selected_option = index
+    if index == 0:
+        feedback = "This puts you at a large risk for fentanyl or other unknown drug overdose. Always ask what the source of the drug is and always test with a fentanyl test strip."
+    elif index == 1:
+        feedback = "Good job asking the source!"
+    elif index == 2:
+        feedback = "Great job using the strip. The test came back positive and you just saved your life."
+    elif index == 3:
+        feedback = "Great job standing strong. If you are not comfortable with a substance - do not take it!"
+
+#Create the buttons for scenario 1
+scenario_1_buttons = [
+    Button ("Take the pill", WIDTH//2 - 250, 100, 500, 60, lambda: option_selected (0)),
+    Button ("Ask what it is and who it came from", WIDTH//2 - 250, 180, 500, 60, lambda:option_selected(1)),
+    Button ("Use fentanyl test strip", WIDTH // 2 - 250, 260, 500, 60, lambda: option_selected (2)),
+    Button ("Deny", WIDTH // 2 - 250, 340, 500, 60, lambda: option_selected (3)),
+]
 
 running = True #keeps running the game until you close it.
 while running:
@@ -89,6 +120,14 @@ while running:
         screen.blit(title_surf, title_rect)
         for button in scenario_buttons:
             button.draw(screen)
+    elif current_screen == SCENARIO_1_SCREEN:
+        question_surf = small_font.render (question, True, BLACK)
+        screen.blit (question_surf, (30, 30))
+        for button in scenario_1_buttons:
+            button.draw(screen)
+        if selected_option is not None:
+            feedback_surf = small_font.render (feedback, True, BLACK)
+            screen.blit (feedback_surf, (30, 430))
     pygame.display.update()
 
 pygame.quit()
