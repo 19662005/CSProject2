@@ -105,18 +105,19 @@ def scenario3_option1_selected(index):
         scenario3_feedback = "You googled it — it’s not prescribed to you and could be dangerous."
     elif index == 2:
         scenario3_feedback = "Good call! You said no. You move on to the celebration."
-        current_screen = SCENARIO_3_SCENE2
-        pygame.time.delay(1000)  # short pause before next scene
+    
+    pygame.time.set_timer(pygame.USEREVENT, 1500)
 
-scenario3_buttons1 = [
-    Button("Take it", WIDTH//2 - 200, 100, 400, 60, lambda: scenario3_option1_selected(0)),
-    Button("Google it first", WIDTH//2 - 200, 180, 400, 60, lambda: scenario3_option1_selected(1)),
-    Button("Say no", WIDTH//2 - 200, 260, 400, 60, lambda: scenario3_option1_selected(2)),
-]
 
 scenario3_question2 = "You’re out celebrating and someone hands you a gummy they say is 'just weed.' What do you do?"
 scenario3_selected2 = None
 scenario3_feedback2 = ""
+
+scenario3_buttons2 = [
+    Button("Say no", WIDTH//2 - 200, 100, 400, 60, lambda: scenario3_option2_selected(0)),
+    Button("Take it", WIDTH//2 - 200, 180, 400, 60, lambda: scenario3_option2_selected(1)),
+    Button("Ask what’s in it", WIDTH//2 - 200, 260, 400, 60, lambda: scenario3_option2_selected(2)),
+]
 
 def scenario3_option2_selected(index):
     global scenario3_selected2, scenario3_feedback2, current_screen
@@ -130,13 +131,7 @@ def scenario3_option2_selected(index):
     elif index == 2:
         scenario3_feedback2 = "You found out it was laced with fentanyl."
         current_screen = SCENARIO_3_SCENE3
-    pygame.time.delay(1000)
-
-scenario3_buttons2 = [
-    Button("Say no", WIDTH//2 - 200, 100, 400, 60, lambda: scenario3_option2_selected(0)),
-    Button("Take it", WIDTH//2 - 200, 180, 400, 60, lambda: scenario3_option2_selected(1)),
-    Button("Ask what’s in it", WIDTH//2 - 200, 260, 400, 60, lambda: scenario3_option2_selected(2)),
-]
+        pygame.time.delay(1000)
 
 
 #Setting up the buttons for the scenario select screen - these will be used to select which scenario to play
@@ -164,6 +159,17 @@ while running:
                 for button in scenario_buttons:
                     if button.is_clicked(pos):
                         button.callback()
+            elif current_screen == SCENARIO_3_SCREEN:
+                for button in scenario3_buttons1:
+                    if button.is_clicked(pos):
+                        button.callback()  # call the function for the selected option
+        if event.type == pygame.USEREVENT:
+            current_screen = SCENARIO_3_SCENE2
+            pygame.time.set_timer(pygame.USEREVENT, 0)  # disable the timer
+
+            
+
+
     if current_screen == START_SCREEN:
         start_button.draw(screen)  # Draw start screen button
     elif current_screen == SCENARIO_SELECT:
@@ -184,7 +190,7 @@ while running:
         # Scenario 3 Scene 2
         draw_wrapped_text(screen, scenario3_question2, 30, 30, small_font, BLACK, WIDTH - 60)
         for button in scenario3_buttons2:
-            button.draw(screen)  # Draw options for Scene 2
+            button.draw(screen)
         if scenario3_selected2 is not None:
             draw_wrapped_text(screen, scenario3_feedback2, 30, 400, small_font, BLACK, WIDTH - 60)
     elif current_screen == SCENARIO_3_SCENE3:
@@ -229,47 +235,6 @@ scenario_1_buttons = [
     Button ("Use fentanyl test strip", WIDTH // 2 - 250, 260, 500, 60, lambda: option_selected (2)),
     Button ("Deny", WIDTH // 2 - 250, 340, 500, 60, lambda: option_selected (3)),
 ]
-
-# Main game loop
-running = True
-while running:
-    screen.fill(WHITE)
-    
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
-            if current_screen == START_SCREEN:
-                if start_button.is_clicked(pos):
-                    start_button.callback()
-            elif current_screen == SCENARIO_SELECT:
-                for button in scenario_buttons:
-                    if button.is_clicked(pos):
-                        button.callback()
-            elif current_screen == SCENARIO_3_SCREEN:
-                for button in scenario3_buttons1:
-                    if button.is_clicked(pos):
-                        button.callback()
-
-    if current_screen == START_SCREEN:
-        start_button.draw(screen)
-    elif current_screen == SCENARIO_SELECT:
-        title_surf = small_font.render("Choose Your Scenario:", True, BLACK)
-        title_rect = title_surf.get_rect(center=(WIDTH//2, 50))
-        screen.blit(title_surf, title_rect)
-        for button in scenario_buttons:
-            button.draw(screen)
-    elif current_screen == SCENARIO_3_SCREEN:
-        draw_wrapped_text(screen, scenario3_question1, 30, 30, small_font, BLACK, WIDTH - 60)
-        for button in scenario3_buttons1:
-            button.draw(screen)
-        if scenario3_selected is not None:
-            draw_wrapped_text(screen, scenario3_feedback, 30, 400, small_font, BLACK, WIDTH - 60)
-
-    pygame.display.update()
-
 
 pygame.quit()
 sys.exit()
