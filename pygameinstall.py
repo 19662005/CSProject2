@@ -20,6 +20,14 @@ DARK_BLUE = (0, 0, 139)
 font = pygame.font.SysFont(None, 48)
 small_font = pygame.font.SysFont(None, 36)
 
+# Loading fentanyl summary image
+try:
+    summary_image = pygame.image.load("fentanyl_dose.jpg")
+    summary_image = pygame.transform.scale(summary_image, (150, 150))
+except:
+    summary_image = None  # Fail gracefully if image not found
+
+
 # Setting up the game screens (also called states), which we'll use to help track what we are displaying and so that things aren't played all at once
 START_SCREEN = "start"
 SCENARIO_SELECT = "select"
@@ -27,6 +35,7 @@ current_screen = START_SCREEN
 SCENARIO_3_SCREEN = "scenario3_scene1"
 SCENARIO_3_SCENE2 = "scenario3_scene2"
 SCENARIO_3_SCENE3 = "scenario3_scene3"
+SUMMARY_SCREEN = "summary"
 
 # Define the draw_wrapped_text function
 def draw_wrapped_text(surface, text, x, y, font, color, width):
@@ -74,6 +83,48 @@ def start_game():
     global current_screen
     current_screen = SCENARIO_SELECT
 
+def play_again():
+    global current_screen, scenario3_selected, scenario3_selected2, scenario3_selected3
+    scenario3_selected = None
+    scenario3_selected2 = None
+    scenario3_selected3 = None
+    current_screen = SCENARIO_SELECT
+
+def exit_game():
+    pygame.quit()
+    sys.exit()
+
+
+# Setting up the summary screen and loading the image
+def draw_summary_screen():
+    screen.fill(WHITE)
+
+    # Display a summary message
+    summary_text = (
+        "Great job navigating tough choices!\n\n"
+        "This game highlights the importance of:\n"
+        "- Asking questions\n"
+        "- Testing unknown substances\n"
+        "- Saying no when unsure\n"
+        "- Calling for help in emergencies\n\n"
+        "Remember: Even small amounts of fentanyl can be deadly. Always test substances, stay informed, and prioritize safety."
+    )
+
+    draw_wrapped_text(screen, summary_text, 30, 30, small_font, BLACK, WIDTH - 60)
+
+    # Display the fentanyl image
+    if summary_image:
+        img_rect = summary_image.get_rect(center=(WIDTH // 2, 350))
+        screen.blit(summary_image, img_rect)
+    # Draw Play Again and Exit buttons
+    for button in summary_buttons:
+        button.draw(screen)
+summary_buttons = [
+    Button("Play Again", WIDTH // 2 - 150, 420, 140, 50, play_again),
+    Button("Exit", WIDTH // 2 + 10, 420, 140, 50, exit_game)
+]
+
+
 #Later on this is where the code for the actual scenes of each scenario will go
 def scenario_1():
     print("Scenario 1 selected")
@@ -107,8 +158,11 @@ def scenario3_option1_selected(index):
         scenario3_feedback = "You googled it — it’s not prescribed to you and could be dangerous."
     elif index == 2:
         scenario3_feedback = "Good call! You said no. You move on to the celebration."
-    
-    pygame.time.set_timer(pygame.USEREVENT + 1, 1500)
+
+    # Display feedback and set timer for transition
+    pygame.time.set_timer(pygame.USEREVENT + 1, 1500)  # Wait for 1.5 seconds before transitioning
+
+
 
 # Scenario 3 Scene 2 prompt
 scenario3_question2 = "You’re out celebrating and someone hands you a gummy they say is 'just weed.' What do you do?"
@@ -133,7 +187,9 @@ def scenario3_option2_selected(index):
     elif index == 2:
         scenario3_feedback2 = "You found out it was laced with fentanyl."
 
+    # Wait before transition to Scene 3
     pygame.time.set_timer(pygame.USEREVENT + 1, 1500)
+
 
 # Scenario 3 Scene 3 prompt
 scenario3_question3 = "3/4 of those at the party display distressing signs. You want to call 911, but others threaten you. What do you do?"
@@ -157,7 +213,8 @@ def scenario3_option3_selected(index):
         scenario3_feedback3 = "You left. Sadly, others were at risk without help."
     elif index == 2:
         scenario3_feedback3 = "Waiting made things worse — overdoses happened."
-    pygame.time.set_timer(pygame.USEREVENT + 1, 1500)
+    pygame.time.set_timer(pygame.USEREVENT + 2, 1500)
+
 
 
 #Setting up the buttons for the scenario select screen - these will be used to select which scenario to play
@@ -168,9 +225,9 @@ scenario_buttons = [
     Button("Scenario 3", WIDTH//2 - 150, 350, 300, 60, scenario_3),
 ]
 
-# This is the main loop
+# Setting up the main loop
 running = True  # Keeps running the game until you close it.
-while running: # This is the event loop
+while running:  # This is the event loop
     screen.fill(WHITE)  # White background
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -178,6 +235,7 @@ while running: # This is the event loop
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
+
             if current_screen == START_SCREEN:
                 if start_button.is_clicked(pos):
                     start_button.callback()
@@ -197,18 +255,41 @@ while running: # This is the event loop
                 for button in scenario3_buttons3:
                     if button.is_clicked(pos):
                         button.callback()
-
+            elif current_screen == SUMMARY_SCREEN:
+                for button in summary_buttons:
+                    if button.is_clicked(pos):
+                        button.callback()
         elif event.type == pygame.USEREVENT + 1:
-            # Advance scenes based on current screen
-            if current_screen == SCENARIO_3_SCREEN:
-                current_screen = SCENARIO_3_SCENE2
-            elif current_screen == SCENARIO_3_SCENE2:
-                current_screen = SCENARIO_3_SCENE3
-            pygame.time.set_timer(pygame.USEREVENT + 1, 0)  # Stop timer
+             # Advance scenes based on current screen
+             if current_screen == SCENARIO_3_SCREEN:
+                 current_screen = SCENARIO_3_SCENE2
+             elif current_screen == SCENARIO_3_SCENE2:
+                 current_screen = SCENARIO_3_SCENE3
+             pygame.time.set_timer(pygame.USEREVENT + 1, 0)  # Stop timer
+        elif event.type == pygame.USEREVENT + 2:  # Timer for Scene 3 to Summary Screen transition
+            current_screen = SUMMARY_SCREEN  # Transition to Summary Screen
+            pygame.time.set_timer(pygame.USEREVENT + 2, 0)  # Stop the timer after the transition
 
-            
 
 
+
+    # Timer event handling for feedback display
+        if event.type == pygame.USEREVENT + 1:  # Timer for Scene 1 to Scene 2 transition
+            if current_screen == SCENARIO_3_SCENE2:
+                current_screen = SCENARIO_3_SCENE2  # Transition to Scene 2
+                pygame.time.set_timer(pygame.USEREVENT + 1, 0)  # Stop the timer after the transition
+
+        elif event.type == pygame.USEREVENT + 2:  # Timer for Scene 2 to Scene 3 transition
+            if current_screen == SCENARIO_3_SCENE3:
+                current_screen = SCENARIO_3_SCENE3  # Transition to Scene 3
+                pygame.time.set_timer(pygame.USEREVENT + 2, 0)  # Stop the timer after the transition
+
+
+
+        
+
+
+# Rendering section
     if current_screen == START_SCREEN:
         start_button.draw(screen)  # Draw start screen button
     elif current_screen == SCENARIO_SELECT:
@@ -217,6 +298,10 @@ while running: # This is the event loop
         screen.blit(title_surf, title_rect)
         for button in scenario_buttons:
             button.draw(screen)  # Draw scenario selection buttons
+    elif current_screen == SUMMARY_SCREEN:
+        draw_summary_screen()  # Render the Summary Screen
+
+
    
    #scenario 3
     elif current_screen == SCENARIO_3_SCREEN:
@@ -239,6 +324,12 @@ while running: # This is the event loop
             button.draw(screen)  # Draw options for Scene 3
         if scenario3_selected3 is not None:
             draw_wrapped_text(screen, scenario3_feedback3, 30, 400, small_font, BLACK, WIDTH - 60)
+    elif current_screen == SUMMARY_SCREEN:
+        for button in summary_buttons:
+            if button.is_clicked(pos):
+                button.callback()
+
+
 
     pygame.display.update()  # Update the display
 
