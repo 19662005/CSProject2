@@ -22,8 +22,8 @@ small_font = pygame.font.SysFont(None, 36)
 
 # Loading fentanyl summary image
 try:
-    summary_image = pygame.image.load("fentanyl_dose.jpg")
-    summary_image = pygame.transform.scale(summary_image, (150, 150))
+    summary_image = pygame.image.load("fentanyllethaldosage.png")
+    summary_image = pygame.transform.scale(summary_image, (180, 180))
 except:
     summary_image = None  # Fail gracefully if image not found
 
@@ -64,17 +64,20 @@ def draw_wrapped_text(surface, text, x, y, font, color, width):
 
 #setting up 'buttons' - these are the clickable areas on the screen that will take you to different screens
 class Button:
-    def __init__(self, text, x, y, width, height, callback):
+    def __init__(self, text, x, y, width, height, callback, font=font):  # default is large font
         self.text = text
         self.rect = pygame.Rect(x, y, width, height)
         self.color = LIGHT_BLUE
         self.callback = callback
+        self.font = font  # store the font for use later
+
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
         pygame.draw.rect(surface, DARK_BLUE, self.rect, 3)  # border
-        text_surf = font.render(self.text, True, BLACK)
+        text_surf = self.font.render(self.text, True, BLACK)
         text_rect = text_surf.get_rect(center=self.rect.center)
         surface.blit(text_surf, text_rect)
+
     def is_clicked(self, pos):
         return self.rect.collidepoint(pos)
 
@@ -98,32 +101,27 @@ def exit_game():
 # Setting up the summary screen and loading the image
 def draw_summary_screen():
     screen.fill(WHITE)
+    summary_font = pygame.font.SysFont(None, 28)  # or 24 if you want it smaller
 
     # Display a summary message
     summary_text = (
-        "Great job navigating tough choices!\n\n"
-        "This game highlights the importance of:\n"
-        "- Asking questions\n"
-        "- Testing unknown substances\n"
-        "- Saying no when unsure\n"
-        "- Calling for help in emergencies\n\n"
-        "Remember: Even small amounts of fentanyl can be deadly. Always test substances, stay informed, and prioritize safety."
+        "Great job navigating tough choices! This game highlights the importance of: Asking questions, Testing unknown substances, Saying no when unsure, and Calling for help in emergencies"
+        " Remember: Even small amounts of fentanyl can be deadly. Always test substances, stay informed, and prioritize safety."
     )
 
     draw_wrapped_text(screen, summary_text, 30, 30, small_font, BLACK, WIDTH - 60)
 
     # Display the fentanyl image
     if summary_image:
-        img_rect = summary_image.get_rect(center=(WIDTH // 2, 350))
+        img_rect = summary_image.get_rect(center=(WIDTH // 2, 310))
         screen.blit(summary_image, img_rect)
     # Draw Play Again and Exit buttons
     for button in summary_buttons:
         button.draw(screen)
 summary_buttons = [
-    Button("Play Again", WIDTH // 2 - 150, 420, 140, 50, play_again),
-    Button("Exit", WIDTH // 2 + 10, 420, 140, 50, exit_game)
+    Button("Play Again", WIDTH // 2 - 150, 420, 140, 50, play_again, small_font),
+    Button("Exit", WIDTH // 2 + 10, 420, 140, 50, exit_game, small_font)
 ]
-
 
 #Later on this is where the code for the actual scenes of each scenario will go
 def scenario_1():
@@ -198,9 +196,9 @@ scenario3_selected3 = None
 
 # Scenario 3 Scene 3 options
 scenario3_buttons3 = [
-    Button("Call 911 anyway", WIDTH//2 - 200, 100, 400, 60, lambda: scenario3_option3_selected(0)),
-    Button("Leave the party", WIDTH//2 - 200, 180, 400, 60, lambda: scenario3_option3_selected(1)),
-    Button("Wait and see", WIDTH//2 - 200, 260, 400, 60, lambda: scenario3_option3_selected(2)),
+    Button("Call 911 anyway", WIDTH//2 - 200, 120, 400, 60, lambda: scenario3_option3_selected(0)),
+    Button("Leave the party", WIDTH//2 - 200, 200, 400, 60, lambda: scenario3_option3_selected(1)),
+    Button("Wait and see", WIDTH//2 - 200, 280, 400, 60, lambda: scenario3_option3_selected(2)),
 ]
 
 # Scenario 3 Scene 3 feedback and responses
