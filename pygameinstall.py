@@ -158,7 +158,7 @@ def scenario3_option1_selected(index):
         scenario3_feedback = "Good call! You said no. You move on to the celebration."
 
     # Display feedback and set timer for transition
-    pygame.time.set_timer(pygame.USEREVENT + 1, 1500)  # Wait for 1.5 seconds before transitioning
+    pygame.time.set_timer(pygame.USEREVENT + 1, 2500)  # Wait for 1.5 seconds before transitioning
 
 
 
@@ -186,7 +186,7 @@ def scenario3_option2_selected(index):
         scenario3_feedback2 = "You found out it was laced with fentanyl."
 
     # Wait before transition to Scene 3
-    pygame.time.set_timer(pygame.USEREVENT + 1, 1500)
+    pygame.time.set_timer(pygame.USEREVENT + 1, 2500)
 
 
 # Scenario 3 Scene 3 prompt
@@ -211,7 +211,7 @@ def scenario3_option3_selected(index):
         scenario3_feedback3 = "You left. Sadly, others were at risk without help."
     elif index == 2:
         scenario3_feedback3 = "Waiting made things worse — overdoses happened."
-    pygame.time.set_timer(pygame.USEREVENT + 2, 1500)
+    pygame.time.set_timer(pygame.USEREVENT + 2, 2500)
 
 
 
