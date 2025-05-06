@@ -37,6 +37,10 @@ SCENARIO_3_SCENE2 = "scenario3_scene2"
 SCENARIO_3_SCENE3 = "scenario3_scene3"
 SUMMARY_SCREEN = "summary"
 
+SCENARIO_1_SCREEN = "scenario1_scene1"
+SCENARIO_1_SCENE2 = "scenario1_scene2"
+SCENARIO_1_SCENE3 = "scenario1_scene3"
+
 # Define the draw_wrapped_text function
 def draw_wrapped_text(surface, text, x, y, font, color, width):
     words = text.split(' ')
@@ -125,8 +129,130 @@ summary_buttons = [
 
 #Later on this is where the code for the actual scenes of each scenario will go
 def scenario_1():
-    print("Scenario 1 selected")
+    #Scenario 1 Scene 1 prompt
+    scenario1_question1 = "You're at a music festival and someone offers you a mysterious pill. What do you do?"
+scenario1_feedback = ""
+scenario1_selected = None
 
+# Scenario 1 Scene 1 answers options
+scenario1_buttons1 = [
+    Button("Take it", WIDTH//2 - 200, 100, 400, 60, lambda: scenario3_option1_selected(0)),
+    Button("Ask where it is from", WIDTH//2 - 200, 180, 400, 60, lambda: scenario3_option1_selected(1)),
+    Button("Say no", WIDTH//2 - 200, 260, 400, 60, lambda: scenario3_option1_selected(2)),
+]
+
+# Scenario 1 Scene 1 feedback and responses
+def scenario1_option1_selected(index):
+    global scenario1_selected, scenario1_feedback, current_screen
+    scenario1_selected = index
+    if index == 0:
+        scenario3_feedback = "You took the pill and feel very sick — you're at risk of overdose."
+    elif index == 1:
+        scenario3_feedback = "They got it from a close friend, but do not know what it is."
+    elif index == 2:
+        scenario3_feedback = "Good call! You said no. You move on to watch the performance."
+
+    # Display feedback and set timer for transition
+    pygame.time.set_timer(pygame.USEREVENT + 1, 2500)  # Wait for 1.5 seconds before transitioning
+
+
+
+# Scenario 1 Scene 2 prompt
+scenario1_question2 = "You've taken an unknown pill from your older sibling and went to a party with friends, but you start to feel dizzy. What do you do?"
+scenario1_feedback2 = ""
+scenario1_selected2 = None
+
+# Scenario 1 Scene 2 options
+scenario1_buttons2 = [
+    Button("Go to the bathroom alone and take deep breaths", WIDTH//2 - 200, 100, 400, 60, lambda: scenario1_option2_selected(0)),
+    Button("Ask your friend to come to the bathroom with you", WIDTH//2 - 200, 180, 400, 60, lambda: scenario1_option2_selected(1)),
+    Button("Call 911", WIDTH//2 - 200, 260, 400, 60, lambda: scenario1_option2_selected(2)),
+]
+
+# Scenario 1 Scene 2 feedback and responses
+def scenario1_option2_selected(index):
+    global scenario1_selected2, scenario1_feedback2
+    scenario1_selected2 = index
+    if index == 0:
+        scenario1_feedback2 = "You risk the chance of an overdose with no help. This is dangerous"
+    elif index == 1:
+        scenario1_feedback2 = "You risk the chance of an overdose, but you do have a trusted individual to call for help if needed. This is still dangerous."
+    elif index == 2:
+        scenario1_feedback2 = "You found out it was laced with fentanyl and saved yourself."
+
+    # Wait before transition to Scene 3
+    pygame.time.set_timer(pygame.USEREVENT + 1, 2500)
+
+
+# Scenario 1 Scene 3 prompt
+scenario1_question3 = "You and your friends get offered a pill at a night club. What do you do?"
+scenario1_feedback3 = ""
+scenario1_selected3 = None
+
+# Scenario 1 Scene 3 options
+scenario1_buttons3 = [
+    Button("Say yes!", WIDTH//2 - 200, 120, 400, 60, lambda: scenario3_option3_selected(0)),
+    Button("Despite your friend saying yes, you say no", WIDTH//2 - 200, 200, 400, 60, lambda: scenario3_option3_selected(1)),
+    Button("Use a fentynal test strip", WIDTH//2 - 200, 280, 400, 60, lambda: scenario3_option3_selected(2)),
+]
+
+# Scenario 1 Scene 3 feedback and responses
+def scenario1_option3_selected(index):
+    global scenario1_selected3, scenario1_feedback3
+    scenario1_selected3 = index
+    if index == 0:
+        scenario1_feedback3 = "You are at risk of overdose. This is dangerous."
+    elif index == 1:
+        scenario1_feedback3 = "Your friend starts acting concerning. You call for help and save their life."
+    elif index == 2:
+        scenario1_feedback3 = "The pill tested positive for fentynal. You saved you and your friends' lives."
+    pygame.time.set_timer(pygame.USEREVENT + 2, 2500)
+
+
+def scenario_1():
+    global current_screen
+    current_screen = SCENARIO_1_SCREEN
+
+start_button = Button ("Start", WIDTH//2 - 100, HEIGHT//2 - 40, 200, 80, start_game)
+scenario_buttons = [
+    Button("Scenario 1", WIDTH//2 - 150, 150, 300, 60, scenario_1),
+    Button("Scenario 2", WIDTH//2 - 150, 250, 300, 60, lambda: print ("Scenario 2 selected")),
+    Button("Exam Season", WIDTH//2 - 150, 350, 300, 60, lambda: print("Scenario 3 selected")),
+]
+
+running = True
+while running:
+    screen.fill(WHITE)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+
+                if current_screen == START_SCREEN:
+                    if start_button.is_clicked(pos):
+                        start_button.callback()
+                elif current_screen == SCENARIO_SELECT:
+                    for button in scenario_buttons: 
+                        if button.is_clicked(pos):
+                            button.callback()
+                elif current_screen == SCENARIO_1_SCREEN:
+                    for button in scenario1_buttons1:
+                        if button.is_clicked(pos):
+                            button.callback()
+                elif current_screen == SCENARIO_1_SCENE2:
+                    for button in scenario1_buttons2:
+                        if button.is_clicked(pos):
+                            button.callback()
+                elif current_screen == SCENARIO_1_SCENE3:
+                    for button in scenario1_buttons3:
+                        if button.is_clicked(pos):
+                            button.callback()
+                elif event.type == pygame.USEREVENT + 1:
+                    if current_screen == SCENARIO_1_SCREEN:
+                        current_screen = SCENARIO_1_SCENE2
+                        pygame
 def scenario_2():
     print("Scenario 2 selected")
 
