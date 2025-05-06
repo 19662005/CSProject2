@@ -104,13 +104,6 @@ def exit_game():
     pygame.quit()
     sys.exit()
 
-# Setting up the start screen 
-start_button = Button ("Start", WIDTH//2 - 100, HEIGHT//2 - 40, 200, 80, start_game)
-scenario_buttons = [
-    Button("Party Time", WIDTH//2 - 150, 150, 300, 60, lambda: print ("Scenario 1 selected")),
-    Button("Scenario 2", WIDTH//2 - 150, 250, 300, 60, lambda: print ("Scenario 2 selected")),
-    Button("Exam Season", WIDTH//2 - 150, 350, 300, 60, lambda: print("Scenario 3 selected")),
-]
 
 # Setting up the summary screen and loading the image
 def draw_summary_screen():
@@ -300,10 +293,9 @@ def scenario3_option3_selected(index):
         scenario3_feedback3 = "Waiting made things worse — overdoses happened."
     pygame.time.set_timer(pygame.USEREVENT + 2, 2500)
 
-#Setting up the buttons for the scenario select screen - these will be used to select which scenario to play
 start_button = Button("Start", WIDTH//2 - 100, HEIGHT//2 - 40, 200, 80, start_game)
 scenario_buttons = [
-    Button("Scenario 1", WIDTH//2 - 150, 150, 300, 60, scenario_1),
+    Button("Party Time", WIDTH//2 - 150, 150, 300, 60, scenario_1),
     Button("Scenario 2", WIDTH//2 - 150, 250, 300, 60, scenario_2),
     Button("Exam Season", WIDTH//2 - 150, 350, 300, 60, scenario_3),
 ]
