@@ -220,7 +220,7 @@ start_button = Button("Start", WIDTH//2 - 100, HEIGHT//2 - 40, 200, 80, start_ga
 scenario_buttons = [
     Button("Scenario 1", WIDTH//2 - 150, 150, 300, 60, scenario_1),
     Button("Scenario 2", WIDTH//2 - 150, 250, 300, 60, scenario_2),
-    Button("Scenario 3", WIDTH//2 - 150, 350, 300, 60, scenario_3),
+    Button("Exam Season", WIDTH//2 - 150, 350, 300, 60, scenario_3),
 ]
 
 # Setting up the main loop
