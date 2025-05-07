@@ -252,7 +252,7 @@ scenario2_selected2 = None
 scenario2_buttons2 = [
     Button("Call 911, check for pulse", WIDTH//2 - 200, 120, 400, 60, lambda: scenario2_scene2_choice(0)),
     Button("Move to a quiet place", WIDTH//2 - 200, 200, 400, 60, lambda: scenario2_scene2_choice(1)),
-    Button("Wait for another friend", WIDTH//2 - 200, 280, 400, 50, lambda: scenario2_scene2_choice(2)),
+    Button("Wait for another friend", WIDTH//2 - 200, 280, 400, 60, lambda: scenario2_scene2_choice(2)),
 ]
 
 # Scenario 2 Scene 2 feedback and responses
