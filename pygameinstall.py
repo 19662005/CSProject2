@@ -118,8 +118,8 @@ def draw_summary_screen():
 
     # Display a summary message
     summary_text = (
-        "Great job navigating tough choices! This game highlights the importance of: Asking questions, Testing unknown substances, Saying no when unsure, and Calling for help in emergencies"
-        " Remember: Even small amounts of fentanyl can be deadly. Always test substances, stay informed, and prioritize safety."
+        "Great job navigating tough choices! This game highlights the importance of: Being sure of what you are consuming, Saying no when unsure, Never using alone, and Calling for help in emergencies!"
+        " Remember: Even small amounts of fentanyl can be deadly. Always test substances, stay informed, and prioritize your safety."
     )
 
     draw_wrapped_text(screen, summary_text, 30, 30, small_font, BLACK, WIDTH - 60)
